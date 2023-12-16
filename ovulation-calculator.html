@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ovulation Calculator</title>
+  </head>
+  <body>
+    <h2>Ovulation Calculator</h2>
+    <p>
+      "The Ovulation Calculator estimates the most probable ovulation/fertile
+      window as well as other related dates. The estimations are based on a
+      woman's last period date. This calculator should not be used as a form of
+      birth control."
+    </p>
+
+    <label for="lastPeriodDate">First Day of Last Period:</label>
+    <input type="date" id="lastPeriodDate" name="lastPeriodDate" />
+
+    <label for="cycleLength">Average Length of Cycles:</label>
+    <input type="number" id="cycleLength" name="cycleLength" value="28" />
+
+    <button onclick="calculate()">Calculate</button>
+
+    <h3>Results</h3>
+    <table id="resultsTable" border="1"></table>
+
+    <h3>Important dates for the next 6 cycles:</h3>
+    <table id="nextCyclesTable" border="1"></table>
+
+    <script>
+      function calculate() {
+        const lastPeriodDate = new Date(
+          document.getElementById("lastPeriodDate").value
+        );
+        const cycleLength = parseInt(
+          document.getElementById("cycleLength").value
+        );
+        const ovulationDay = 14; // Most common ovulation day
+        const lutealPhase = 14; // Average luteal phase length
+
+        let results = [
+          { label: "Ovulation Window", dates: [] },
+          { label: "Most Probable Ovulation Date", date: null },
+          { label: "Intercourse Window for Pregnancy", dates: [] },
+          { label: "Pregnancy Test", date: null },
+          { label: "Next Period Start", date: null },
+          { label: "Due Date If Pregnant", date: null },
+        ];
+
+        // Calculate ovulation and related dates
+        const ovulationDate = addDays(
+          lastPeriodDate,
+          cycleLength - ovulationDay
+        );
+        results[0].dates = [
+          formatDate(addDays(ovulationDate, -4)),
+          formatDate(addDays(ovulationDate, 4)),
+        ];
+        results[1].date = formatDate(ovulationDate);
+        results[2].dates = [
+          formatDate(addDays(ovulationDate, -5)),
+          formatDate(addDays(ovulationDate, 5)),
+        ];
+        results[3].date = formatDate(addDays(ovulationDate, lutealPhase));
+        results[4].date = formatDate(addDays(lastPeriodDate, cycleLength));
+        results[5].date = formatDate(addDays(ovulationDate, 280));
+
+        // Display results
+        let resultsTable = document.getElementById("resultsTable");
+        resultsTable.innerHTML = ""; // Clear previous results
+        results.forEach((result) => {
+          let row = resultsTable.insertRow();
+          let cell1 = row.insertCell(0);
+          let cell2 = row.insertCell(1);
+          cell1.textContent = result.label;
+          cell2.textContent = result.date
+            ? result.date
+            : result.dates.join(" - ");
+        });
+
+        // Calculate important dates for the next 6 cycles
+        let nextCyclesTable = document.getElementById("nextCyclesTable");
+        nextCyclesTable.innerHTML = ""; // Clear previous cycles
+        let header = nextCyclesTable.createTHead();
+        let headerRow = header.insertRow();
+        ["Period Start", "Ovulation Window", "Due Date"].forEach((text) => {
+          let th = document.createElement("th");
+          th.textContent = text;
+          headerRow.appendChild(th);
+        });
+
+        let tbody = nextCyclesTable.createTBody();
+        for (let i = 0; i < 6; i++) {
+          let periodStart = addDays(lastPeriodDate, cycleLength * i);
+          let ovulation = addDays(periodStart, cycleLength - ovulationDay);
+          let dueDate = addDays(ovulation, 280);
+          let row = tbody.insertRow();
+          let cell1 = row.insertCell(0);
+          let cell2 = row.insertCell(1);
+          let cell3 = row.insertCell(2);
+          cell1.textContent = formatDate(periodStart);
+          cell2.textContent =
+            formatDate(addDays(ovulation, -4)) +
+            " - " +
+            formatDate(addDays(ovulation, 4));
+          cell3.textContent = formatDate(dueDate);
+        }
+      }
+
+      function addDays(date, days) {
+        let result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+      }
+
+      function formatDate(date) {
+        let options = { year: "numeric", month: "short", day: "numeric" };
+        return date.toLocaleDateString("en-US", options);
+      }
+    </script>
+  </body>
+</html>

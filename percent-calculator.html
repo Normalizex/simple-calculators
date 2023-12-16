@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Percentage Calculators</title>
+  </head>
+  <body>
+    <h2>Percentage Calculator</h2>
+    <input type="number" id="percent" placeholder="%" />
+    <input type="number" id="baseValue" placeholder="of" />
+    <button onclick="calculatePercentage()">Calculate</button>
+    <p id="resultPercentage"></p>
+
+    <h2>Percentage Difference Calculator</h2>
+    <input type="number" id="value1" placeholder="Value 1" />
+    <input type="number" id="value2" placeholder="Value 2" />
+    <button onclick="calculatePercentageDifference()">Calculate</button>
+    <p id="resultPercentageDifference"></p>
+
+    <h2>Percentage Change Calculator</h2>
+    <input type="number" id="initialValue" placeholder="Initial Value" />
+    <select id="changeType">
+      <option value="increase">Increase</option>
+      <option value="decrease">Decrease</option>
+    </select>
+    <input type="number" id="changePercent" placeholder="%" />
+    <button onclick="calculatePercentageChange()">Calculate</button>
+    <p id="resultPercentageChange"></p>
+
+    <h2>Percentage Calculator in Common Phrases</h2>
+    <input type="number" id="partValue" placeholder="Part Value" />
+    <input type="number" id="wholeValue" placeholder="Whole Value" />
+    <button onclick="calculatePercentagePart()">Calculate</button>
+    <p id="resultPercentagePart"></p>
+
+    <script>
+      function calculatePercentage() {
+        const percent = parseFloat(document.getElementById("percent").value);
+        const baseValue = parseFloat(
+          document.getElementById("baseValue").value
+        );
+        const result = (percent / 100) * baseValue;
+        document.getElementById("resultPercentage").textContent = result;
+      }
+
+      function calculatePercentageDifference() {
+        const value1 = parseFloat(document.getElementById("value1").value);
+        const value2 = parseFloat(document.getElementById("value2").value);
+        const difference = Math.abs(value1 - value2);
+        const result = (difference / ((value1 + value2) / 2)) * 100;
+        document.getElementById("resultPercentageDifference").textContent =
+          result.toFixed(2) + "%";
+      }
+
+      function calculatePercentageChange() {
+        const initialValue = parseFloat(
+          document.getElementById("initialValue").value
+        );
+        const changeType = document.getElementById("changeType").value;
+        const changePercent = parseFloat(
+          document.getElementById("changePercent").value
+        );
+        const change = (changePercent / 100) * initialValue;
+        const result =
+          changeType === "increase"
+            ? initialValue + change
+            : initialValue - change;
+        document.getElementById("resultPercentageChange").textContent = result;
+      }
+
+      function calculatePercentagePart() {
+        const partValue = parseFloat(
+          document.getElementById("partValue").value
+        );
+        const wholeValue = parseFloat(
+          document.getElementById("wholeValue").value
+        );
+        const percent = (partValue / wholeValue) * 100;
+        document.getElementById("resultPercentagePart").textContent =
+          percent.toFixed(2) + "%";
+      }
+    </script>
+  </body>
+</html>

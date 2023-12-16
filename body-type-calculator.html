@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Body Type Calculator</title>
+  </head>
+  <body>
+    <h2>Body Type Calculator</h2>
+
+    <label for="bust">Bust Size (cm):</label>
+    <input type="number" id="bust" step="0.01" />
+    <br />
+    <label for="waist">Waist Size (cm):</label>
+    <input type="number" id="waist" step="0.01" />
+    <br />
+    <label for="highHip">High Hip Size (cm):</label>
+    <input type="number" id="highHip" step="0.01" />
+    <br />
+    <label for="hip">Hip Size (cm):</label>
+    <input type="number" id="hip" step="0.01" />
+    <br />
+    <button onclick="calculateBodyType()">Calculate</button>
+
+    <h3>Results</h3>
+    <p id="bodyTypeResult"></p>
+    <p id="whrResult"></p>
+
+    <script>
+      function calculateBodyType() {
+        const bust = parseFloat(document.getElementById("bust").value);
+        const waist = parseFloat(document.getElementById("waist").value);
+        const highHip = parseFloat(document.getElementById("highHip").value);
+        const hip = parseFloat(document.getElementById("hip").value);
+        const bustWaist = bust - waist;
+        const hipWaist = hip - waist;
+        const highHipWaistRatio = highHip / waist;
+        const bustHips = bust - hip;
+        const hipsBust = hip - bust;
+
+        let bodyShape = "Undefined";
+        // Convert cm to inches for comparison
+        const inchConversion = 0.393701;
+        const bustWaistInches = bustWaist * inchConversion;
+        const hipWaistInches = hipWaist * inchConversion;
+        const bustHipsInches = bustHips * inchConversion;
+        const hipsBustInches = hipsBust * inchConversion;
+
+        if (
+          bustWaistInches >= 9 &&
+          hipWaistInches >= 10 &&
+          (bustHipsInches <= 1 || hipsBustInches < 3.6)
+        ) {
+          bodyShape = "Hourglass";
+        } else if (
+          hipsBustInches >= 3.6 &&
+          hipsBustInches < 10 &&
+          hipWaistInches >= 9 &&
+          highHipWaistRatio < 1.193
+        ) {
+          bodyShape = "Bottom hourglass";
+        } else if (
+          bustHipsInches > 1 &&
+          bustHipsInches < 10 &&
+          bustWaistInches >= 9
+        ) {
+          bodyShape = "Top hourglass";
+        } else if (
+          hipsBustInches > 2 &&
+          hipWaistInches >= 7 &&
+          highHipWaistRatio >= 1.193
+        ) {
+          bodyShape = "Spoon";
+        } else if (hipsBustInches >= 3.6 && hipWaistInches < 9) {
+          bodyShape = "Triangle";
+        } else if (bustHipsInches >= 3.6 && bustWaistInches < 9) {
+          bodyShape = "Inverted triangle";
+        } else if (
+          hipsBustInches < 3.6 &&
+          bustHipsInches < 3.6 &&
+          bustWaistInches < 9 &&
+          hipWaistInches < 10
+        ) {
+          bodyShape = "Rectangle";
+        }
+
+        // Calculate Waist-Hip Ratio (WHR)
+        const whr = waist / hip;
+        const whrResult = "Waist-hip ratio (WHR): " + whr.toFixed(2);
+
+        document.getElementById("bodyTypeResult").textContent =
+          "Body shape: " + bodyShape;
+        document.getElementById("whrResult").textContent = whrResult;
+      }
+    </script>
+  </body>
+</html>

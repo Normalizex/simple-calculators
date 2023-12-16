@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Age Calculator</title>
+  </head>
+  <body>
+    <h2>Age Calculator</h2>
+
+    <label for="dateOfBirth">Date of Birth:</label>
+    <input type="date" id="dateOfBirth" name="dateOfBirth" />
+
+    <label for="ageAtDate">Age at the Date of:</label>
+    <input type="date" id="ageAtDate" name="ageAtDate" />
+
+    <button onclick="calculateAge()">Calculate Age</button>
+
+    <h3>Results</h3>
+    <div id="ageResult">
+      <p>
+        Age: <span id="years">0</span> years <span id="months">0</span> months
+        <span id="days">0</span> days
+      </p>
+      <p>or <span id="hours">0</span> hours</p>
+      <p>or <span id="minutes">0</span> minutes</p>
+      <p>or <span id="seconds">0</span> seconds</p>
+    </div>
+
+    <script>
+      function calculateAge() {
+        const dateOfBirth = new Date(
+          document.getElementById("dateOfBirth").value
+        );
+        const ageAtDate = new Date(document.getElementById("ageAtDate").value);
+
+        // Check if the dates are valid
+        if (!(dateOfBirth.getTime() && ageAtDate.getTime())) {
+          alert("Please enter valid dates.");
+          return;
+        }
+
+        if (dateOfBirth > ageAtDate) {
+          alert("Age at the date must be after the date of birth.");
+          return;
+        }
+
+        let years = ageAtDate.getFullYear() - dateOfBirth.getFullYear();
+        let months = ageAtDate.getMonth() - dateOfBirth.getMonth();
+        let days = ageAtDate.getDate() - dateOfBirth.getDate();
+
+        // Adjust if the end month has not been reached
+        if (months < 0 || (months === 0 && days < 0)) {
+          years--;
+          months = (months + 12) % 12;
+        }
+
+        // Adjust days
+        if (days < 0) {
+          const previousMonth = new Date(
+            ageAtDate.getFullYear(),
+            ageAtDate.getMonth(),
+            0
+          );
+          days += previousMonth.getDate();
+          months--;
+        }
+
+        // Set the adjusted age
+        document.getElementById("years").textContent = years;
+        document.getElementById("months").textContent = months;
+        document.getElementById("days").textContent = days;
+
+        // Calculate hours, minutes, and seconds
+        const hours = Math.floor((ageAtDate - dateOfBirth) / (3600 * 1000));
+        const minutes = Math.floor((ageAtDate - dateOfBirth) / (60 * 1000));
+        const seconds = Math.floor((ageAtDate - dateOfBirth) / 1000);
+
+        document.getElementById("hours").textContent = hours;
+        document.getElementById("minutes").textContent = minutes;
+        document.getElementById("seconds").textContent = seconds;
+      }
+    </script>
+  </body>
+</html>

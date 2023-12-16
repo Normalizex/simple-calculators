@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Love Calculator</title>
+  </head>
+  <body>
+    <h2>Love Calculator</h2>
+
+    <label for="name1">Name of Person 1:</label>
+    <input type="text" id="name1" placeholder="Enter Name" />
+    <br />
+    <label for="name2">Name of Person 2:</label>
+    <input type="text" id="name2" placeholder="Enter Name" />
+    <br />
+    <button onclick="calculateLove()">Calculate</button>
+
+    <h3>Compatibility Score</h3>
+    <p id="loveScore"></p>
+
+    <script>
+      function calculateLove() {
+        const name1 = document.getElementById("name1").value.toUpperCase();
+        const name2 = document.getElementById("name2").value.toUpperCase();
+
+        // Sum of ASCII values for both names
+        const score1 = getAsciiSum(name1);
+        const score2 = getAsciiSum(name2);
+
+        // A playful calculation for compatibility:
+        // We'll use the sum and difference of the ASCII values, mod by 100 to get a score
+        const sumScores = score1 + score2;
+        const diffScores = Math.abs(score1 - score2);
+        const compatibility = (sumScores - diffScores) % 100;
+
+        document.getElementById("loveScore").textContent =
+          "Your compatibility score is: " + compatibility + "%";
+      }
+
+      function getAsciiSum(name) {
+        return name
+          .split("")
+          .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      }
+    </script>
+  </body>
+</html>

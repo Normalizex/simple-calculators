@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sleep Cycle Calculator</title>
+  </head>
+  <body>
+    <h2>Sleep Cycle Calculator</h2>
+
+    <div>
+      <input
+        type="radio"
+        id="wakeUpOption"
+        name="sleepOption"
+        value="wakeUp"
+        checked
+      />
+      <label for="wakeUpOption">I want to wake up at</label>
+      <input
+        type="radio"
+        id="goToBedOption"
+        name="sleepOption"
+        value="goToBed"
+      />
+      <label for="goToBedOption">I want to go to bed at</label>
+    </div>
+
+    <div>
+      <label for="time">Time:</label>
+      <input type="time" id="time" value="06:00" />
+    </div>
+
+    <div>
+      <label for="cycleLength">My sleep cycle length is:</label>
+      <input type="number" id="cycleLength" value="90" />
+      <label for="cycleLength">minutes</label>
+    </div>
+
+    <div>
+      <label for="fallAsleepTime">It takes me</label>
+      <input type="number" id="fallAsleepTime" value="15" />
+      <label for="fallAsleepTime">minutes to fall asleep</label>
+    </div>
+
+    <button onclick="calculateSleepTime()">Calculate</button>
+    <button onclick="clearFields()">Clear</button>
+
+    <h3>Results</h3>
+    <p id="explanation"></p>
+    <ul id="sleepTimes"></ul>
+
+    <script>
+      function calculateSleepTime() {
+        const sleepOption = document.querySelector(
+          'input[name="sleepOption"]:checked'
+        ).value;
+        const time = document.getElementById("time").value;
+        const cycleLength = parseInt(
+          document.getElementById("cycleLength").value
+        );
+        const fallAsleepTime = parseInt(
+          document.getElementById("fallAsleepTime").value
+        );
+        const resultElement = document.getElementById("sleepTimes");
+        const explanationElement = document.getElementById("explanation");
+
+        const [hours, minutes] = time.split(":").map((num) => parseInt(num));
+        let date = new Date();
+        date.setHours(hours, minutes, 0);
+
+        const cycles = [5, 6, 7]; // Recommended sleep cycles
+        let resultHTML = "";
+
+        explanationElement.textContent = `If you ${
+          sleepOption === "wakeUp" ? "go to bed at" : "want to wake up at"
+        } ${time}, it is recommended to ${
+          sleepOption === "wakeUp" ? "get up" : "go to bed"
+        } at one of the following times to wake up refreshed:`;
+
+        if (sleepOption === "wakeUp") {
+          for (let cycle of cycles) {
+            let cycleTime = new Date(
+              date.getTime() - (cycle * cycleLength + fallAsleepTime) * 60000
+            );
+            resultHTML +=
+              "<li>" +
+              formatTime(cycleTime) +
+              " (" +
+              cycle +
+              " sleep cycles)</li>";
+          }
+        } else {
+          for (let cycle of cycles.reverse()) {
+            let cycleTime = new Date(
+              date.getTime() + (cycle * cycleLength + fallAsleepTime) * 60000
+            );
+            resultHTML +=
+              "<li>" +
+              formatTime(cycleTime) +
+              " (" +
+              cycle +
+              " sleep cycles)</li>";
+          }
+        }
+
+        resultElement.innerHTML = resultHTML;
+      }
+
+      function clearFields() {
+        document.getElementById("time").value = "06:00";
+        document.getElementById("cycleLength").value = "90";
+        document.getElementById("fallAsleepTime").value = "15";
+        document.getElementById("sleepTimes").innerHTML = "";
+        document.getElementById("explanation").textContent = "";
+      }
+
+      function formatTime(date) {
+        return (
+          date.getHours().toString().padStart(2, "0") +
+          ":" +
+          date.getMinutes().toString().padStart(2, "0")
+        );
+      }
+    </script>
+  </body>
+</html>

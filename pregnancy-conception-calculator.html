@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pregnancy Date Calculator</title>
+  </head>
+  <body>
+    <h2>Pregnancy Date Calculator</h2>
+
+    <label for="calculationBasis">Calculation Basis:</label>
+    <select
+      id="calculationBasis"
+      name="calculationBasis"
+      onchange="showRelevantInput()"
+    >
+      <option value="lastPeriod">Last Period</option>
+      <option value="dueDate">Due Date</option>
+      <option value="ultrasound">Ultrasound</option>
+    </select>
+
+    <div id="lastPeriodInput">
+      <label for="lastPeriodDate">First Day of Your Last Period:</label>
+      <input type="date" id="lastPeriodDate" name="lastPeriodDate" />
+      <label for="cycleLength">Average Length of Your Cycles:</label>
+      <input type="number" id="cycleLength" name="cycleLength" value="28" />
+    </div>
+
+    <div id="dueDateInput" style="display: none">
+      <label for="dueDate">Due Date:</label>
+      <input type="date" id="dueDate" name="dueDate" />
+    </div>
+
+    <div id="ultrasoundInput" style="display: none">
+      <label for="ultrasoundDate">Ultrasound Date:</label>
+      <input type="date" id="ultrasoundDate" name="ultrasoundDate" />
+      <label for="weeks">Weeks:</label>
+      <input type="number" id="weeks" name="weeks" />
+      <label for="days">Days:</label>
+      <input type="number" id="days" name="days" />
+    </div>
+
+    <button onclick="calculate()">Calculate</button>
+    <p id="result"></p>
+
+    <script>
+      function showRelevantInput() {
+        var basis = document.getElementById("calculationBasis").value;
+        document.getElementById("lastPeriodInput").style.display =
+          basis === "lastPeriod" ? "block" : "none";
+        document.getElementById("dueDateInput").style.display =
+          basis === "dueDate" ? "block" : "none";
+        document.getElementById("ultrasoundInput").style.display =
+          basis === "ultrasound" ? "block" : "none";
+      }
+
+      function calculate() {
+        const basis = document.getElementById("calculationBasis").value;
+        let resultText = "";
+
+        if (basis === "ultrasound") {
+          const ultrasoundDate = new Date(
+            document.getElementById("ultrasoundDate").value
+          );
+          const weeks = parseInt(document.getElementById("weeks").value);
+          const days = parseInt(document.getElementById("days").value);
+
+          // Calculating the estimated conception date based on ultrasound information
+          const gestationalAgeDays = weeks * 7 + days;
+          const conceptionDate = addDays(ultrasoundDate, -gestationalAgeDays);
+
+          // Adjusting the windows for probable and possible dates
+          const mostProbableStart = addDays(conceptionDate, -4); // Earlier start for most probable
+          const mostProbableEnd = addDays(conceptionDate, 4); // Later end for most probable
+
+          const possibleStart = addDays(conceptionDate, -10); // Earlier start for possible
+          const possibleEnd = addDays(conceptionDate, 10); // Later end for possible
+
+          const intercourseStartMostProbable = addDays(mostProbableStart, -3);
+          const intercourseEndMostProbable = addDays(mostProbableEnd, 3);
+
+          const intercourseStartPossible = addDays(possibleStart, -5);
+          const intercourseEndPossible = addDays(possibleEnd, 5);
+
+          resultText = `Most probable conception dates: ${formatDate(
+            mostProbableStart
+          )} - ${formatDate(mostProbableEnd)}<br>
+Most probable dates of sexual intercourse that led to the pregnancy: ${formatDate(
+            intercourseStartMostProbable
+          )} - ${formatDate(intercourseEndMostProbable)}<br>
+Possible conception dates: ${formatDate(possibleStart)} - ${formatDate(
+            possibleEnd
+          )}<br>
+Possible dates of sexual intercourse that led to the pregnancy: ${formatDate(
+            intercourseStartPossible
+          )} - ${formatDate(intercourseEndPossible)}<br>`;
+        }
+
+        if (basis === "lastPeriod") {
+          const lastPeriodDate = new Date(
+            document.getElementById("lastPeriodDate").value
+          );
+          const cycleLength = parseInt(
+            document.getElementById("cycleLength").value
+          );
+
+          // Ovulation typically occurs around 14 days before the next cycle starts
+          const ovulationDate = addDays(lastPeriodDate, cycleLength - 14);
+
+          const mostProbableStart = addDays(ovulationDate, -2);
+          const mostProbableEnd = addDays(ovulationDate, 2);
+
+          const possibleStart = addDays(ovulationDate, -5);
+          const possibleEnd = addDays(ovulationDate, 5);
+
+          const intercourseStartMostProbable = addDays(mostProbableStart, -3);
+          const intercourseEndMostProbable = addDays(mostProbableEnd, 3);
+
+          const intercourseStartPossible = addDays(possibleStart, -5);
+          const intercourseEndPossible = addDays(possibleEnd, 5);
+
+          resultText = `Most probable conception dates: ${formatDate(
+            mostProbableStart
+          )} - ${formatDate(mostProbableEnd)}<br>
+Most probable dates of sexual intercourse that led to the pregnancy: ${formatDate(
+            intercourseStartMostProbable
+          )} - ${formatDate(intercourseEndMostProbable)}<br>
+Possible conception dates: ${formatDate(possibleStart)} - ${formatDate(
+            possibleEnd
+          )}<br>
+Possible dates of sexual intercourse that led to the pregnancy: ${formatDate(
+            intercourseStartPossible
+          )} - ${formatDate(intercourseEndPossible)}<br>`;
+        }
+
+        if (basis === "dueDate") {
+          const dueDate = new Date(document.getElementById("dueDate").value);
+          const conceptionDate = addDays(dueDate, -266); // Adjusted estimated conception date
+
+          const mostProbableStart = addDays(conceptionDate, -2);
+          const mostProbableEnd = addDays(conceptionDate, 2);
+
+          const possibleStart = addDays(conceptionDate, -5);
+          const possibleEnd = addDays(conceptionDate, 5);
+
+          const intercourseStartMostProbable = addDays(mostProbableStart, -3);
+          const intercourseEndMostProbable = addDays(mostProbableEnd, 3);
+
+          const intercourseStartPossible = addDays(possibleStart, -5);
+          const intercourseEndPossible = addDays(possibleEnd, 5);
+
+          resultText = `Most probable conception dates: ${formatDate(
+            mostProbableStart
+          )} - ${formatDate(mostProbableEnd)}<br>
+Most probable dates of sexual intercourse that led to the pregnancy: ${formatDate(
+            intercourseStartMostProbable
+          )} - ${formatDate(intercourseEndMostProbable)}<br>
+Possible conception dates: ${formatDate(possibleStart)} - ${formatDate(
+            possibleEnd
+          )}<br>
+Possible dates of sexual intercourse that led to the pregnancy: ${formatDate(
+            intercourseStartPossible
+          )} - ${formatDate(intercourseEndPossible)}<br>`;
+        }
+
+        document.getElementById("result").innerHTML = resultText;
+      }
+
+      function addDays(date, days) {
+        const result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+      }
+
+      function formatDate(date) {
+        return date.toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        });
+      }
+    </script>
+  </body>
+</html>

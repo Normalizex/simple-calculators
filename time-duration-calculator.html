@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Time Difference Calculator</title>
+    <script>
+      document.addEventListener("DOMContentLoaded", (event) => {
+        function populateTimeOptions() {
+          const hours = [...Array(12).keys()].map((i) => i + 1); // Hours 1-12
+          const minutesAndSeconds = [...Array(60).keys()]; // Minutes and seconds 0-59
+
+          populateSelect(document.getElementById("startHour"), hours);
+          populateSelect(
+            document.getElementById("startMinute"),
+            minutesAndSeconds
+          );
+          populateSelect(
+            document.getElementById("startSecond"),
+            minutesAndSeconds
+          );
+          populateSelect(document.getElementById("endHour"), hours);
+          populateSelect(
+            document.getElementById("endMinute"),
+            minutesAndSeconds
+          );
+          populateSelect(
+            document.getElementById("endSecond"),
+            minutesAndSeconds
+          );
+        }
+
+        function populateSelect(selectElement, valuesArray) {
+          valuesArray.forEach((value) => {
+            const option = document.createElement("option");
+            option.value = value;
+            option.textContent = value.toString().padStart(2, "0");
+            selectElement.appendChild(option);
+          });
+        }
+
+        populateTimeOptions();
+      });
+    </script>
+  </head>
+  <body>
+    <h2>Time Difference Calculator</h2>
+
+    <div>
+      <label>Start Time:</label>
+      <select id="startHour"></select>
+      :
+      <select id="startMinute"></select>
+      :
+      <select id="startSecond"></select>
+      <select id="startMeridiem">
+        <option value="AM">AM</option>
+        <option value="PM">PM</option>
+      </select>
+    </div>
+
+    <div>
+      <label>End Time:</label>
+      <select id="endHour"></select>
+      :
+      <select id="endMinute"></select>
+      :
+      <select id="endSecond"></select>
+      <select id="endMeridiem">
+        <option value="AM">AM</option>
+        <option value="PM">PM</option>
+      </select>
+    </div>
+
+    <button onclick="calculateTimeDifference()">Calculate</button>
+    <button type="button" onclick="clearFields()">Clear</button>
+
+    <h3>Results</h3>
+    <p id="timeDifference">
+      Please select start and end times and click Calculate.
+    </p>
+
+    <script>
+      function timeToMinutes(hour, minute, second, meridiem) {
+        hour = meridiem === "PM" ? (hour % 12) + 12 : hour % 12;
+        return hour * 60 + minute + second / 60;
+      }
+
+      function calculateTimeDifference() {
+        const startHour = parseInt(document.getElementById("startHour").value);
+        const startMinute = parseInt(
+          document.getElementById("startMinute").value
+        );
+        const startSecond = parseInt(
+          document.getElementById("startSecond").value
+        );
+        const startMeridiem = document.getElementById("startMeridiem").value;
+
+        const endHour = parseInt(document.getElementById("endHour").value);
+        const endMinute = parseInt(document.getElementById("endMinute").value);
+        const endSecond = parseInt(document.getElementById("endSecond").value);
+        const endMeridiem = document.getElementById("endMeridiem").value;
+
+        const startTime = timeToMinutes(
+          startHour,
+          startMinute,
+          startSecond,
+          startMeridiem
+        );
+        const endTime = timeToMinutes(
+          endHour,
+          endMinute,
+          endSecond,
+          endMeridiem
+        );
+
+        const timeDiff = endTime - startTime;
+        const hours = Math.floor(timeDiff / 60);
+        const minutes = timeDiff % 60;
+        const seconds = (timeDiff * 60) % 60;
+
+        document.getElementById("timeDifference").textContent =
+          hours +
+          " hours, " +
+          minutes +
+          " minutes, and " +
+          seconds +
+          " seconds";
+      }
+
+      function clearFields() {
+        document.getElementById("startHour").value = "";
+        document.getElementById("startMinute").value = "";
+        document.getElementById("startSecond").value = "";
+        document.getElementById("startMeridiem").value = "AM";
+        document.getElementById("endHour").value = "";
+        document.getElementById("endMinute").value = "";
+        document.getElementById("endSecond").value = "";
+        document.getElementById("endMeridiem").value = "AM";
+        document.getElementById("timeDifference").textContent =
+          "Please select start and end times and click Calculate.";
+      }
+    </script>
+  </body>
+</html>

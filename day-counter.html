@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Day Counter</title>
+  </head>
+  <body>
+    <h2>Day Counter</h2>
+
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" name="startDate" />
+
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" name="endDate" />
+
+    <button onclick="countDays()">Count Days</button>
+
+    <h3>Results</h3>
+    <p id="dayCountResult"></p>
+
+    <script>
+      function countDays() {
+        const startDate = new Date(document.getElementById("startDate").value);
+        const endDate = new Date(document.getElementById("endDate").value);
+
+        // Check if the dates are valid
+        if (!(startDate.getTime() && endDate.getTime())) {
+          alert("Please enter valid dates.");
+          return;
+        }
+
+        if (startDate > endDate) {
+          alert("End Date must be after the Start Date.");
+          return;
+        }
+
+        const diffTime = endDate - startDate;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        const startDayOfWeek = startDate.toLocaleDateString("en-US", {
+          weekday: "long",
+        });
+        const endDayOfWeek = endDate.toLocaleDateString("en-US", {
+          weekday: "long",
+        });
+
+        const startDateFormatted = startDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+        const endDateFormatted = endDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+
+        document.getElementById(
+          "dayCountResult"
+        ).textContent = `There are ${diffDays} days between ${startDateFormatted} (${startDayOfWeek}) and ${endDateFormatted} (${endDayOfWeek})`;
+      }
+    </script>
+  </body>
+</html>
