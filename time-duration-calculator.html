@@ -72,7 +72,22 @@
     </div>
 
     <button onclick="calculateTimeDifference()">Calculate</button>
-    <button type="button" onclick="clearFields()">Clear</button>
+
+    <h2>Time Between Two Dates</h2>
+
+    <div>
+      <label for="startDateTime">Start Time:</label>
+      <input type="date" id="startDate" step="1" />
+      <input type="time" id="startTime" step="1" />
+    </div>
+
+    <div>
+      <label for="endDateTime">End Time:</label>
+      <input type="date" id="endDate" step="1" />
+      <input type="time" id="endTime" step="1" />
+    </div>
+
+    <button onclick="calculateTimeDifference2Dates()">Calculate</button>
 
     <h3>Results</h3>
     <p id="timeDifference">
@@ -80,6 +95,40 @@
     </p>
 
     <script>
+      function calculateTimeDifference2Dates() {
+        const startDate = document.getElementById("startDate").value;
+        const startTime = document.getElementById("startTime").value;
+        const endDate = document.getElementById("endDate").value;
+        const endTime = document.getElementById("endTime").value;
+
+        const startDateTime = new Date(startDate + "T" + startTime);
+        const endDateTime = new Date(endDate + "T" + endTime);
+
+        const difference = endDateTime - startDateTime;
+
+        const days = Math.floor(difference / (24 * 60 * 60 * 1000));
+        const hours = Math.floor(
+          (difference % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000)
+        );
+        const minutes = Math.floor(
+          (difference % (60 * 60 * 1000)) / (60 * 1000)
+        );
+        const seconds = Math.floor((difference % (60 * 1000)) / 1000);
+
+        document.getElementById("timeDifference").textContent =
+          "Days: " +
+          days +
+          ", " +
+          "Hours: " +
+          hours +
+          ", " +
+          "Minutes: " +
+          minutes +
+          ", " +
+          "Seconds: " +
+          seconds;
+      }
+
       function timeToMinutes(hour, minute, second, meridiem) {
         hour = meridiem === "PM" ? (hour % 12) + 12 : hour % 12;
         return hour * 60 + minute + second / 60;

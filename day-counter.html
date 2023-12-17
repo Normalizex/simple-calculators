@@ -15,10 +15,45 @@
 
     <button onclick="countDays()">Count Days</button>
 
+    <h2>Count Days from a Date</h2>
+    <label for="initialDate">Start Date:</label>
+    <input type="date" id="initialDate" value="2023-12-17" />
+    <label for="daysToAdd">Add days:</label>
+    <input type="number" id="daysToAdd" value="15" />
+    <button onclick="countDays2()">Count Days</button>
+
     <h3>Results</h3>
     <p id="dayCountResult"></p>
 
     <script>
+      function countDays2() {
+        const startDate = new Date(
+          document.getElementById("initialDate").value
+        );
+        const addDays = parseInt(document.getElementById("daysToAdd").value);
+        const resultDate = new Date(startDate);
+
+        resultDate.setDate(resultDate.getDate() + addDays);
+
+        const resultText = `${formatDate(
+          resultDate
+        )} is the date ${addDays} days after ${formatDate(
+          startDate
+        )}, including ${formatDate(startDate)}.`;
+
+        document.getElementById("dayCountResult").textContent = resultText;
+      }
+
+      function formatDate(date) {
+        const options = {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          weekday: "long",
+        };
+        return date.toLocaleDateString("en-US", options);
+      }
+
       function countDays() {
         const startDate = new Date(document.getElementById("startDate").value);
         const endDate = new Date(document.getElementById("endDate").value);

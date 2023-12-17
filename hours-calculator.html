@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Time Difference Calculator</title>
+  </head>
+  <body>
+    <h2>Hours Calculator</h2>
+
+    <label for="startTime">Start Time:</label>
+    <input type="time" id="startTime" value="08:30" />
+
+    <label for="endTime">End Time:</label>
+    <input type="time" id="endTime" value="17:30" />
+
+    <button onclick="calculateTimeDifference()">Calculate</button>
+
+    <h2>Hours Between Two Dates</h2>
+    <div>
+      <label for="startDate2">Start Date:</label>
+      <input type="date" id="startDate2" value="2023-12-17" />
+      <label for="startTime2">Start Time:</label>
+      <input type="time" id="startTime2" value="08:30" />
+    </div>
+
+    <div>
+      <label for="endDate2">End Date:</label>
+      <input type="date" id="endDate2" value="2023-12-17" />
+      <label for="endTime2">End Time:</label>
+      <input type="time" id="endTime2" value="17:30" />
+    </div>
+    <button onclick="calculateDateTimeDifference2()">Calculate</button>
+
+    <h3>Result</h3>
+    <p id="timeDifferenceResult"></p>
+
+    <script>
+      function calculateTimeDifference() {
+        const startTime = document.getElementById("startTime").valueAsNumber; // Gets time in milliseconds
+        const endTime = document.getElementById("endTime").valueAsNumber; // Gets time in milliseconds
+
+        // Calculate the difference in minutes
+        const difference = (endTime - startTime) / (1000 * 60);
+
+        // Convert minutes to hours and minutes
+        const hours = Math.floor(difference / 60);
+        const minutes = Math.abs(difference % 60); // Use absolute value to avoid negative results
+
+        document.getElementById(
+          "timeDifferenceResult"
+        ).textContent = `The time between ${formatTime(
+          new Date(startTime)
+        )} and ${formatTime(
+          new Date(endTime)
+        )} is: ${hours} hours ${minutes} minutes`;
+      }
+
+      function calculateDateTimeDifference2() {
+        const startDate = document.getElementById("startDate2").value;
+        const startTime = document.getElementById("startTime2").value;
+		const startTimeNum = document.getElementById("startTime2").valueAsNumber;
+        const endDate = document.getElementById("endDate2").value;
+        const endTime = document.getElementById("endTime2").value;
+		const endTimeNum = document.getElementById("endTime2").valueAsNumber;
+
+        const start = new Date(`${startDate}T${startTime}`);
+        const end = new Date(`${endDate}T${endTime}`);
+
+        // Calculate the difference in minutes
+        const difference = (end - start) / (1000 * 60);
+
+        // Convert minutes to hours and minutes
+        const hours = Math.floor(difference / 60);
+        const minutes = Math.abs(difference % 60); // Use absolute value to avoid negative results
+
+        document.getElementById(
+          "timeDifferenceResult"
+        ).textContent = `${hours} hours ${minutes} minutes`;
+      }
+
+      function formatTime(date) {
+        return date.toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        });
+      }
+    </script>
+  </body>
+</html>

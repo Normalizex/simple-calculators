@@ -43,13 +43,83 @@
     </div>
 
     <button onclick="calculateSleepTime()">Calculate</button>
-    <button onclick="clearFields()">Clear</button>
+
+    <h2>Sleep Cycle and Length Calculator</h2>
+
+    <div>
+      <input
+        type="radio"
+        id="wakeUpOption2"
+        name="timeOption2"
+        value="wakeUp"
+        checked
+      />
+      <label for="wakeUpOption2">I want to wake up at:</label>
+      <input
+        type="radio"
+        id="goToBedOption2"
+        name="timeOption2"
+        value="goToBed"
+      />
+      <label for="goToBedOption2">I want to go to bed at:</label>
+    </div>
+
+    <div>
+      <label for="time">Time:</label>
+      <input type="time" id="time" value="06:00" />
+    </div>
+
+    <div>
+      <label for="hours">I want to sleep for:</label>
+      <input type="number" id="hours" value="7" />
+      <label for="hours">hours</label>
+      <input type="number" id="minutes" value="30" />
+      <label for="minutes">minutes</label>
+    </div>
+
+    <button onclick="calculateTime()">Calculate</button>
 
     <h3>Results</h3>
     <p id="explanation"></p>
     <ul id="sleepTimes"></ul>
 
     <script>
+      function calculateTime() {
+        const option = document.querySelector(
+          'input[name="timeOption2"]:checked'
+        ).value;
+        const timeValue = document.getElementById("time").value;
+        const hours = parseInt(document.getElementById("hours").value, 10);
+        const minutes = parseInt(document.getElementById("minutes").value, 10);
+        const totalMinutes = hours * 60 + minutes;
+
+        let date = new Date();
+        const [selectedHour, selectedMinute] = timeValue
+          .split(":")
+          .map((str) => parseInt(str, 10));
+        date.setHours(selectedHour, selectedMinute);
+
+        if (option === "wakeUp") {
+          date.setMinutes(date.getMinutes() - totalMinutes);
+          document.getElementById(
+            "explanation"
+          ).textContent = `You should go to bed at: ${formatTime(date)}`;
+        } else {
+          date.setMinutes(date.getMinutes() + totalMinutes);
+          document.getElementById(
+            "explanation"
+          ).textContent = `You should wake up at: ${formatTime(date)}`;
+        }
+
+        function formatTime(date) {
+          return date.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          });
+        }
+      }
+
       function calculateSleepTime() {
         const sleepOption = document.querySelector(
           'input[name="sleepOption"]:checked'
